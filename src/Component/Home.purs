@@ -26,14 +26,20 @@ component =
   render :: State -> H.ComponentHTML Query
   render state =
     HH.div_
-      [ HH.h1_
-          [ HH.text "B" ]
-      , HH.p_
-          [ HH.a
-          [ safeHref ComponentB ]
-          [ HH.text "Already have an account?" ]
-        ]
+    [ link ComponentA
+    , link ComponentB ]
+
+  link :: forall i p. Route -> HH.HTML i p
+  link route =
+    HH.div_
+    [ HH.h1_
+        [ HH.text $ show route ]
+    , HH.p_
+        [ HH.a
+        [ safeHref route ]
+        [ HH.text $ "Take me to " <> show route ]
       ]
+    ]
 
   eval :: Query ~> H.ComponentDSL State Query Void m
   eval = case _ of

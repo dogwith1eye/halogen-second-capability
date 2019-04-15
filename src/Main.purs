@@ -20,8 +20,8 @@ import Type.Equality (class TypeEquals, from)
 
 import Capability.LogMessages (class LogMessages)
 import Capability.Navigate (class Navigate)
+import Data.Route (Route, routeCodec)
 import Component.Router as Router
-import Data.Route as Route
 
 data LogLevel = Dev | Prod
 
@@ -52,7 +52,7 @@ instance logMessagesAppM :: LogMessages AppM where
 
 instance navigateAppM :: Navigate AppM where
   navigate =
-    liftEffect <<< setHash <<< print Route.routeCodec
+    liftEffect <<< setHash <<< print routeCodec
 
 main :: Effect Unit
 main = HA.runHalogenAff do
@@ -69,12 +69,12 @@ main = HA.runHalogenAff do
     rootComponent :: H.Component HH.HTML Router.Query Router.Input Void Aff
     rootComponent = H.hoist (runAppM environment) Router.component
 
-    initialRoute :: Maybe Route.Route
-    initialRoute = hush $ parse Route.routeCodec initialHash
+    initialRoute :: Maybe Route
+    initialRoute = hush $ parse routeCodec initialHash
 
   halogenIO <- runUI rootComponent initialRoute body
 
-  void $ liftEffect $ matchesWith (parse Route.routeCodec) \old new ->
+  void $ liftEffect $ matchesWith (parse routeCodec) \old new ->
     when (old /= Just new) do
       launchAff_ $ halogenIO.query $ H.action $ Router.Navigate new
 
