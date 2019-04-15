@@ -4,9 +4,9 @@ import Prelude
 
 import Control.Monad.Reader.Trans (class MonadAsk, ReaderT, ask, asks, runReaderT)
 import Data.Either (hush)
-import Data.Maybe (Maybe)
+import Data.Maybe (Maybe(..))
 import Effect (Effect)
-import Effect.Aff (Aff)
+import Effect.Aff (Aff, launchAff_)
 import Effect.Aff.Class (class MonadAff)
 import Effect.Class (class MonadEffect, liftEffect)
 import Effect.Console as Console
@@ -15,7 +15,7 @@ import Halogen.Aff as HA
 import Halogen.HTML as HH
 import Halogen.VDom.Driver (runUI)
 import Routing.Duplex (parse, print)
-import Routing.Hash (getHash, setHash)
+import Routing.Hash (getHash, matchesWith, setHash)
 import Type.Equality (class TypeEquals, from)
 
 import Capability.LogMessages (class LogMessages)
@@ -72,4 +72,10 @@ main = HA.runHalogenAff do
     initialRoute :: Maybe Route.Route
     initialRoute = hush $ parse Route.routeCodec initialHash
 
-  runUI rootComponent initialRoute body
+  halogenIO <- runUI rootComponent initialRoute body
+
+  void $ liftEffect $ matchesWith (parse Route.routeCodec) \old new ->
+    when (old /= Just new) do
+      launchAff_ $ halogenIO.query $ H.action $ Router.Navigate new
+
+  pure unit

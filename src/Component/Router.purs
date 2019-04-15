@@ -2,19 +2,20 @@ module Component.Router where
 
 import Prelude
 
-import Data.Either.Nested (Either2)
-import Data.Functor.Coproduct.Nested (Coproduct2)
-import Data.Maybe (Maybe(..), fromMaybe)
-import Effect.Aff.Class (class MonadAff)
-import Halogen as H
-import Halogen.Component.ChildPath as CP
-import Halogen.HTML as HH
-
-import Capability.LogMessages (class LogMessages)
+import Capability.LogMessages (class LogMessages, log)
 import Capability.Navigate (class Navigate)
 import Component.ComponentA as ComponentA
 import Component.ComponentB as ComponentB
+import Component.Home as Home
+import Data.Either.Nested (Either2)
+import Data.Functor.Coproduct.Nested (Coproduct2)
+import Data.Maybe (Maybe(..), fromMaybe)
 import Data.Route (Route(..))
+import Effect.Aff.Class (class MonadAff)
+import Halogen (Component)
+import Halogen as H
+import Halogen.Component.ChildPath as CP
+import Halogen.HTML as HH
 
 type State =
   { route :: Route }
@@ -52,6 +53,7 @@ component =
   eval :: Query ~> H.ParentDSL State Query ChildQuery ChildSlot Void m
   eval (Navigate dest a) = do
     { route } <- H.get
+    log route
     when (route /= dest) do
       H.modify_ _ { route = dest }
     pure a

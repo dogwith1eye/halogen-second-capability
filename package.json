@@ -3,7 +3,9 @@
   "scripts": {
     "build": "pulp build --to dist/app.js",
     "watch": "pulp -w build --to dist/app.js",
-    "watch-fast": "webpack --mode=development --entry ./entry.js --output-path ./dist --output-filename app.js --progress --watch"
+    "watch-fast": "webpack --mode=development --entry ./entry.js --output-path ./dist --output-filename app.js --progress --watch",
+    "build-serve": "pulp --then \"parcel build assets/index.html && http-server dist\" build --to dist/app.js",
+    "watch-serve": "pulp -w --then \"parcel build assets/index.html && http-server dist\" build --to dist/app.js"
   },
   "devDependencies": {
     "pulp": "^12.3.0",
@@ -11,5 +13,8 @@
     "purescript-psa": "^0.7.2",
     "webpack": "^4.16.2",
     "webpack-cli": "^3.1.0"
+  },
+  "dependencies": {
+    "http-server": "^0.11.1"
   }
 }

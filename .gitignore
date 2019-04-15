@@ -1,8 +1,19 @@
-/.*
-!/.gitignore
-!/.travis.yml
-/bower_components/
-/node_modules/
-/output/
-/dist/app.js
-package-lock.json
+# Dependencies
+.psci_modules
+bower_components
+node_modules
+
+# Dot files
+.psci
+.pulp-cache
+.purs-repl
+.package-lock
+.psc-ide-port
+.cache
+
+# Generated
+output
+dce-output
+dist
+*.lock
+*.map
