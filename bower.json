@@ -12,6 +12,10 @@
     "purescript-halogen": "^4.0.0",
     "purescript-prelude": "^4.1.0",
     "purescript-console": "^4.1.0",
-    "purescript-effect": "^2.0.0"
+    "purescript-effect": "^2.0.0",
+    "purescript-transformers": "^4.2.0",
+    "purescript-routing-duplex": "^0.3.0",
+    "purescript-generics-rep": "^6.1.1",
+    "purescript-routing": "^9.0.0"
   }
 }
